@@ -1,4 +1,4 @@
-package pojo;
+package test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +43,7 @@ public class usertest {
         // 通过会话工厂获取会话
         SqlSession openSession = factory.openSession();
         // 调用User.xml中的魔化查询方法 返回集合
-        List<User> selectList = openSession.selectList("test.findUserByName", "张");
+        List<User> selectList = openSession.selectList("test.findUserByUserName", "imi");
         // 循环结果
         System.out.println(selectList.size());
         for (User user : selectList) {
@@ -76,5 +76,42 @@ public class usertest {
         // 关闭会话
         openSession.close();
     }
-	
+	@Test
+    public void test4() throws IOException {
+        // 核心配置文件
+        String resource = "SqlMapConfig.xml";
+        // 通过流将核心配置文件加载进来
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        // 通过配置文件创建会话工厂
+        SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(inputStream);
+        // 通过会话工厂获取会话
+        SqlSession openSession = factory.openSession();
+        // 会话执行sql操作
+        openSession.delete("test.delUserById", 1);
+        // 提交事务
+        openSession.commit();
+        // 关闭会话
+        openSession.close();
+    }
+	@Test
+    public void test5() throws Exception {
+        // 核心配置文件
+        String resource = "SqlMapConfig.xml";
+        // 通过流将核心配置文件加载进来
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        // 通过配置文件创建会话工厂
+        SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(inputStream);
+        // 通过会话工厂获取会话
+        SqlSession openSession = factory.openSession();
+        //创建User对象
+        User user = new User ();
+        user.setId(1);
+        user.setUsername("王麻子");
+        openSession.update("test.updateUserById", user);
+        //提交事务
+        openSession.commit();
+        //关闭会话
+        openSession.close();
+
+    }
 }
